@@ -1,0 +1,887 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Devolio</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="prism/prism.css">
+    <script src="prism/prism.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="main.js"></script>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body style="background-color: #070707; color: white">
+<br>
+<br>
+<br>
+<div style="text-align: center;padding: 40px;margin-left: 15%;margin-right: 15%;">
+    Hello, world! I'm <span class="gradient">Jackson Gray</span>, a 20-year-old current living in Chicago.
+    My aspirations are firmly set on becoming a software engineer, and I'm always eager to get closer to this goal.
+    I've enrolled in programming courses at Columbia College Chicago, completed CS50x by Harvard, and undertaken numerous passion projects, continually learning through hands-on experience.
+    <br><br>
+    While I might see myself as typically boring and uninteresting, code never fails to spark my creativity in ways I didn't think I was capable of.
+    My current toolset includes a mix of <span class="gradient">C, C#, C++, HTML, CSS, and PHP</span>, with hands-on experience creating projects and finding solutions in each of these languages.
+    I genuinely believe that technology can be whatever you want it to be and has the power to change the world.
+    <br><br>
+    This webpage serves as a showcase for my skills and knowledge as I continue to grow in the field of software engineering.
+    Below, you can find personal projects, schoolwork, and other pieces of my work. All of my code is available on my <a href="https://github.com/jgray08/" target="_blank" class="link">GitHub</a>.
+</div>
+
+
+<div class="nav">
+    <a href="#caesar">Caesar.c</a>
+    <a href="#filter">Filter.c</a>
+    <a href="#runoff">Runoff.c</a>
+    <a href="#multiplayersnake">MultiplayerSnake.c</a>
+    <a href="#render">Render.c</a>
+</div>
+
+
+<div id="caesar" class="section">
+    <h2 class="gradient">Caesar.c</h2>
+    <p>This is a project I completed for CS50x 2023. It is a Caesar cipher written in the C programming language. It "encrypts" messages by "rotating" or "shifting" them a certain amount <i><b>K</b></i> places.</p>
+    <pre><code class="language-c">
+#include &lt;cs50.h>
+#include &lt;ctype.h>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;string.h>
+
+void rotate();
+
+int main(int argc, string argv[])
+{
+    if (argc != 2)
+    {
+        printf("usage: ./caesar key\n");
+        return 1;
+    }
+    else
+    {
+        int result = strcmp(argv[1], "2x");
+        if (result == 0)
+        {
+            return 1;
+        }
+        int key = atoi(argv[1]);
+        printf("isdigit: %i\n", isdigit(key));
+        printf("plaintext:  ");
+        string text = get_string("");
+        rotate(key, text);
+    }
+}
+
+void rotate(int key, string text)
+{
+    char cipher[strlen(text)];
+    for (int i = 0; i < strlen(text); i++)
+    {
+        if (isalpha(text[i]))
+        {
+            while (key > 26)
+            {
+                key -= 26;
+            }
+            char tmp = text[i];
+            if (isupper(text[i]))
+            {
+                tmp = 'A' + (tmp - 'A' + key) % 26;
+            }
+            else if (islower(text[i]))
+            {
+                tmp = 'a' + (tmp - 'a' + key) % 26;
+            }
+            cipher[i] = tmp;
+        }
+        else
+        {
+            cipher[i] = text[i];
+        }
+    }
+    printf("ciphertext: ");
+    for (int i = 0; i < strlen(cipher); i++)
+    {
+        printf("%c", cipher[i]);
+    }
+    printf("\n");
+}
+    </code></pre>
+</div>
+<div id="filter" class="section">
+    <h2 class="gradient">Filter.c</h2>
+    <p>This is a project I completed for CS50x 2023. It is a program that takes in an input image, applies a filter based on user input, and outputs the resulting image. This is the filtering portion of code, written by me. The rest of the code for usage of this project can be found on <a href="https://github.com/jgray08/CS50/tree/main/filter-less" target="_blank" class="link">GitHub</a>. This code demonstrates an understanding of the general C syntax, the usage and declaration of structs, and the usage of external header files.</p>
+    <pre><code class="language-c">
+#include "helpers.h"
+#include &lt;math.h>
+#include &lt;stdio.h>
+
+// Convert image to grayscale
+void grayscale(int height, int width, RGBTRIPLE image[height][width])
+{
+    for (int r = 0; r < height; r++)
+    {
+        for (int c = 0; c < width; c++)
+        {
+            int t = 0;
+            int red = image[r][c].rgbtRed;
+            int green = image[r][c].rgbtGreen;
+            int blue = image[r][c].rgbtBlue;
+            t = round(((float) red + green + blue) / 3);
+            image[r][c].rgbtRed = t;
+            image[r][c].rgbtGreen = t;
+            image[r][c].rgbtBlue = t;
+        }
+    }
+    return;
+}
+
+// Convert image to sepia
+void sepia(int height, int width, RGBTRIPLE image[height][width])
+{
+    for (int r = 0; r < height; r++)
+    {
+        for (int c = 0; c < width; c++)
+        {
+            int red = image[r][c].rgbtRed;
+            int green = image[r][c].rgbtGreen;
+            int blue = image[r][c].rgbtBlue;
+            int newRed = round(.393 * (float) red + .769 * green + .189 * blue);
+            int newGreen = round(.349 * (float) red + .686 * green + .168 * blue);
+            int newBlue = round(.272 * (float) red + .534 * green + .131 * blue);
+            if (newRed > 255)
+            {
+                newRed = 255;
+            }
+
+            if (newGreen > 255)
+            {
+                newGreen = 255;
+            }
+
+            if (newBlue > 255)
+            {
+                newBlue = 255;
+            }
+            image[r][c].rgbtRed = newRed;
+            image[r][c].rgbtGreen = newGreen;
+            image[r][c].rgbtBlue = newBlue;
+        }
+    }
+    return;
+}
+
+// Reflect image horizontally
+void reflect(int height, int width, RGBTRIPLE image[height][width])
+{
+    for (int r = 0; r < height; r++)
+    {
+        RGBTRIPLE temp[width];
+        for (int c = 0; c < width; c++)
+        {
+            int red = image[r][c].rgbtRed;
+            int green = image[r][c].rgbtGreen;
+            int blue = image[r][c].rgbtBlue;
+            int newC = width - c - 1;
+
+            temp[newC].rgbtRed = red;
+            temp[newC].rgbtGreen = green;
+            temp[newC].rgbtBlue = blue;
+        }
+
+        for (int c = 0; c < width; c++)
+        {
+            image[r][c].rgbtRed = temp[c].rgbtRed;
+            image[r][c].rgbtGreen = temp[c].rgbtGreen;
+            image[r][c].rgbtBlue = temp[c].rgbtBlue;
+        }
+    }
+    return;
+}
+
+// Blur image
+void blur(int height, int width, RGBTRIPLE image[height][width])
+{
+    RGBTRIPLE output[height][width];
+    int amt = 0;
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+    for (int r = 0; r < height; r++)
+    {
+        for (int c = 0; c < width; c++)
+        {
+            amt = 0;
+            red = 0;
+            green = 0;
+            blue = 0;
+            for (int x = -1; x < 2; x++)
+            {
+                for (int y = -1; y < 2; y++)
+                {
+                    int newx = r + x;
+                    int newy = c + y;
+                    if (newx >= 0 && newx < height && newy >= 0 && newy < width)
+                    {
+                        amt++;
+                        red += image[newx][newy].rgbtRed;
+                        green += image[newx][newy].rgbtGreen;
+                        blue += image[newx][newy].rgbtBlue;
+                    }
+                }
+            }
+            output[r][c].rgbtRed = round((float) red / amt);
+            output[r][c].rgbtGreen = round((float) green / amt);
+            output[r][c].rgbtBlue = round((float) blue / amt);
+        }
+    }
+    // apply output array to original image array
+    for (int r = 0; r < height; r++)
+    {
+        for (int c = 0; c < width; c++)
+        {
+            image[r][c] = output[r][c];
+        }
+    }
+    return;
+}
+    </code></pre>
+</div>
+<div id="runoff" class="section">
+    <h2 class="gradient">Runoff.c</h2>
+    <p>This is a project I completed for CS50x 2023. It is a simple program that is designed to simulate a runoff election. It demonstrates understanding of file handling within C. </p>
+    <pre><code class="language-c">
+#include &lt;cs50.h>
+#include &lt;math.h>
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+// Max voters and candidates
+#define MAX_VOTERS 100
+#define MAX_CANDIDATES 9
+
+// preferences[i][j] is jth preference for voter i
+int preferences[MAX_VOTERS][MAX_CANDIDATES];
+
+// Candidates have name, vote count, eliminated status
+typedef struct
+{
+    string name;
+    int votes;
+    bool eliminated;
+} candidate;
+
+// Array of candidates
+candidate candidates[MAX_CANDIDATES];
+
+// Numbers of voters and candidates
+int voter_count;
+int candidate_count;
+
+// Function prototypes
+bool vote(int voter, int rank, string name);
+void tabulate(void);
+bool print_winner(void);
+int find_min(void);
+bool is_tie(int min);
+void eliminate(int min);
+
+int main(int argc, string argv[])
+{
+    // Check for invalid usage
+    if (argc < 2)
+    {
+        printf("Usage: runoff [candidate ...]\n");
+        return 1;
+    }
+
+    // Populate array of candidates
+    candidate_count = argc - 1;
+    if (candidate_count > MAX_CANDIDATES)
+    {
+        printf("Maximum number of candidates is %i\n", MAX_CANDIDATES);
+        return 2;
+    }
+    for (int i = 0; i < candidate_count; i++)
+    {
+        candidates[i].name = argv[i + 1];
+        candidates[i].votes = 0;
+        candidates[i].eliminated = false;
+    }
+
+    voter_count = get_int("Number of voters: ");
+    if (voter_count > MAX_VOTERS)
+    {
+        printf("Maximum number of voters is %i\n", MAX_VOTERS);
+        return 3;
+    }
+
+    // Keep querying for votes
+    for (int i = 0; i < voter_count; i++)
+    {
+
+        // Query for each rank
+        for (int j = 0; j < candidate_count; j++)
+        {
+            string name = get_string("Rank %i: ", j + 1);
+
+            // Record vote, unless it's invalid
+            if (!vote(i, j, name))
+            {
+                printf("Invalid vote.\n");
+                return 4;
+            }
+        }
+
+        printf("\n");
+    }
+
+    // Keep holding runoffs until winner exists
+    while (true)
+    {
+        // Calculate votes given remaining candidates
+        tabulate();
+
+        // Check if election has been won
+        bool won = print_winner();
+        if (won)
+        {
+            break;
+        }
+
+        // Eliminate last-place candidates
+        int min = find_min();
+        bool tie = is_tie(min);
+
+        // If tie, everyone wins
+        if (tie)
+        {
+            for (int i = 0; i < candidate_count; i++)
+            {
+                if (!candidates[i].eliminated)
+                {
+                    printf("%s\n", candidates[i].name);
+                }
+            }
+            break;
+        }
+
+        // Eliminate anyone with minimum number of votes
+        eliminate(min);
+
+        // Reset vote counts back to zero
+        for (int i = 0; i < candidate_count; i++)
+        {
+            candidates[i].votes = 0;
+        }
+    }
+    return 0;
+}
+
+// preferences[VOTER (ROW)][RANK (COLUM)] is jth preference for voter i
+// int preferences[MAX_VOTERS][MAX_CANDIDATES];
+// Record preference if vote is valid
+bool vote(int voter, int rank, string name)
+{
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (strcmp(candidates[i].name, name) == 0)
+        {
+            preferences[voter][rank] = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+void tabulate(void)
+{
+    for (int r = 0; r < voter_count; r++)
+    {
+        for (int c = 0; c < candidate_count; c++)
+        {
+            int index = preferences[r][c];
+            if (candidates[index].eliminated == false)
+            {
+                candidates[index].votes++;
+                break;
+            }
+        }
+    }
+
+    return;
+}
+
+bool print_winner(void)
+{
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (candidates[i].votes > voter_count / 2)
+        {
+            printf("%s\n", candidates[i].name); // print winner
+            return true;
+        }
+    }
+    return false;
+}
+
+// Return the minimum number of votes any remaining candidates has
+int find_min(void)
+{
+    int min = 9999;
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (candidates[i].eliminated == false)
+        {
+            if (candidates[i].votes < min)
+            {
+                min = candidates[i].votes;
+            }
+        }
+    }
+    return min;
+}
+
+// Return true if the election is tied between all candidates, false otherwise
+bool is_tie(int min)
+{
+    int max = 0;
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (candidates[i].votes > max)
+        {
+            max = candidates[i].votes;
+        }
+    }
+    if (max == min)
+    {
+        return true;
+    }
+    return false;
+}
+
+// Eliminate the candidate (or candidates) in last place
+void eliminate(int min)
+{
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (candidates[i].votes == min)
+        {
+            candidates[i].eliminated = true;
+        }
+    }
+}
+    </code></pre>
+</div>
+<div id="multiplayersnake" class="section">
+    <h2 class="gradient">MultiplayerSnake.cs</h2>
+    <p>This is my midterm project for PROG-101 taken at Columbia College. It is a Snake game played by 2 players, that uses a custom renderer to display the gamestate via external console. This is only the game.cs file, it handles most of the games logic. You can view the rest of the source code on <a href="https://github.com/jgray08/MultiplayerSnake" target="_blank" class="link">GitHub</a>. It is my first real project done in C#. I am proud of the end result, but looking back, it could benefit greatly from some refactoring.</p>
+    <pre><code class="language-csharp">
+namespace MultiplayerSnake;
+
+public class Game
+{
+    private static Snake? p1;
+    private static Snake? p2;
+    public static HashSet&lt;Tuple&lt;int, int>> p1Body = new HashSet&lt;Tuple&lt;int, int>>();
+    public static HashSet&lt;Tuple&lt;int, int>> p2Body = new HashSet&lt;Tuple&lt;int, int>>();
+    private static int FrameDelay = 45;
+    public static void Begin()
+    {
+        int difficulty = Start.SelectDifficulty();
+        if (difficulty == 4)
+        {
+            FrameDelay = 5;
+        }
+        else if (difficulty == 3)
+        {
+            FrameDelay = 20;
+        }
+        else if (difficulty == 2)
+        {
+            FrameDelay = 30;
+        }
+        else if (difficulty == 1)
+        {
+            FrameDelay = 50;
+        }
+        Console.Clear();
+        Console.CursorVisible = false;
+        p1 = new Snake("1");
+        p2 = new Snake("2");
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Be the last snake standing. Consume the food spread around the map to grow your snake!");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("");
+        Console.WriteLine("Player 1: Use WASD to move your snake.\nPlayer 2: Use the arrow keys to move your snake.");
+        Console.WriteLine("");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Don't touch the border or another snake!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        Console.ForegroundColor = ConsoleColor.Gray;
+        Thread.Sleep(5000);
+        Console.Write("Game will begin in 3");
+        Thread.Sleep(1000);
+        Console.Write("\rGame will begin in 2");
+        Thread.Sleep(1000);
+        Console.Write("\rGame will begin in 1");
+        Thread.Sleep(1000);
+        Renderer.Init(); // Init renderer
+        for (int i = 0; i < 30; i ++)
+        {
+            Food.Generate();
+        }
+        //Main game loop
+        while (true)
+        {
+            //Gather input + clear current render
+            Task.Factory.StartNew(() => GetInput());
+            Renderer.Clear();
+            //Food logic
+            int index = 0;
+            foreach (var place in Food.locations)
+            {
+                //Render food in the list
+                Renderer.Point(place[0], place[1], ConsoleColor.DarkRed);
+                //P1 Collision logic
+                if (p1.x == place[0] && p1.y == place[1])
+                {
+                    if (OperatingSystem.IsWindows())
+                    {
+                        Console.Beep(750, 10);
+                    }
+                    p1.grow = index;
+                }
+                //P2 Collision logic
+                if (p2.x == place[0] && p2.y == place[1])
+                {
+                    if (OperatingSystem.IsWindows())
+                    {
+                        Console.Beep(750, 10);
+                    }
+                    p2.grow = index;
+                }
+                index++;
+            }
+            //P1 Growing/removing tail logic
+            if (p1.grow == -1)
+            {
+                p1Body.Remove(Tuple.Create(p1.body[p1.body.Count - 1][0], p1.body[p1.body.Count - 1][1]));
+                p1.body.RemoveAt(p1.body.Count - 1);
+            }
+            else
+            {
+                Food.Generate();
+                Food.locations.RemoveAt(p1.grow);
+                p1.grow = -1;
+            }
+            //P2 Growing/removing tail logic
+            if (p2.grow == -1)
+            {
+                p2Body.Remove(Tuple.Create(p2.body[p2.body.Count - 1][0], p2.body[p2.body.Count - 1][1]));
+                p2.body.RemoveAt(p2.body.Count - 1);
+            }
+            else
+            {
+                Food.Generate();
+                Food.locations.RemoveAt(p2.grow);
+                p2.grow = -1;
+            }
+            //Reset acceptinginput variable + handle snake head movement
+            //P1
+            p1.acceptinginput = true;
+            if (p1.direction == "up")
+            {
+                p1.y++;
+            }
+            if (p1.direction == "left")
+            {
+                p1.x--;
+            }
+            if (p1.direction == "down")
+            {
+                p1.y--;
+            }
+            if (p1.direction == "right")
+            {
+                p1.x++;
+            }
+            //P2
+            p2.acceptinginput = true;
+            if (p2.direction == "up")
+            {
+                p2.y++;
+            }
+            if (p2.direction == "left")
+            {
+                p2.x--;
+            }
+            if (p2.direction == "down")
+            {
+                p2.y--;
+            }
+            if (p2.direction == "right")
+            {
+                p2.x++;
+            }
+            //P1 Body collision check
+            if (p1Body.Contains(Tuple.Create(p1.x, p1.y)) || p2Body.Contains(Tuple.Create(p1.x, p1.y))) {
+                // p1's head collided with p1 or p2's body, game over
+                Winner(p2);
+                return;
+            }
+            //P2 Body collision check
+            if (p1Body.Contains(Tuple.Create(p2.x, p2.y)) || p2Body.Contains(Tuple.Create(p2.x, p2.y))) {
+                // p1's head collided with p1 or p2's body, game over
+                Winner(p1);
+                return;
+            }
+            //P1 Add new body after movement and collision check was made
+            p1.body.Insert(0, new[]{p1.x, p1.y});
+            p1Body.Add(Tuple.Create(p1.x, p1.y));
+            //P1 Check new head location is within the screen + renders whole body
+            if (p1.x > 0 && p1.x <= Console.WindowWidth && p1.y > 0 && p1.y <= Console.WindowHeight)
+            {
+                foreach (var segment in p1.body)
+                {
+                    Renderer.Inject(Utilities.Location(segment[0], segment[1]), p1.Color);
+                }
+            }
+            else //Set P2 as winner
+            {
+                Winner(p2);
+                break;
+            }
+            //P2 Add new body after movement and collision check was made
+            p2.body.Insert(0, new[]{p2.x, p2.y});
+            p2Body.Add(Tuple.Create(p2.x, p2.y));
+            if (p2.x > 0 && p2.x <= Console.WindowWidth && p2.y > 0 && p2.y <= Console.WindowHeight)
+            {
+                foreach (var segment in p2.body)
+                {
+                    Renderer.Inject(Utilities.Location(segment[0], segment[1]), p2.Color);
+                }
+            }
+            else //Set P1 as winner
+            {
+                Winner(p1);
+                break;
+            }
+            //Tell renderer we're done adding things
+            Renderer.Process();
+            Thread.Sleep(FrameDelay);
+        }
+    }
+    
+    private static void GetInput()
+    {
+        if (p1 != null && p2 != null && p1.direction != null && p2.direction != null)
+        {
+            switch (Console.ReadKey(true).Key)
+            {
+                case ConsoleKey.W:
+                    if (p1.direction != "down" && p1.acceptinginput)
+                    {
+                        p1.direction = "up";
+                        p1.acceptinginput = false;
+                    }
+                    break;
+                case ConsoleKey.A:
+                    if (p1.direction != "right" && p1.acceptinginput)
+                    {
+                        p1.direction = "left";
+                        p1.acceptinginput = false;
+                    }
+                    break;
+                case ConsoleKey.S:
+                    if (p1.direction != "up" && p1.acceptinginput)
+                    {
+                        p1.direction = "down";
+                        p1.acceptinginput = false;
+                    }
+                    break;
+                case ConsoleKey.D:
+                    if (p1.direction != "left" && p1.acceptinginput)
+                    {
+                        p1.direction = "right";
+                        p1.acceptinginput = false;
+                    }
+                    break;
+                case ConsoleKey.UpArrow:
+                    if (p2.direction != "down" && p2.acceptinginput)
+                    {
+                        p2.direction = "up";
+                        p2.acceptinginput = false;
+                    }
+                    break;
+                case ConsoleKey.LeftArrow:
+                    if (p2.direction != "right" && p2.acceptinginput)
+                    {
+                        p2.direction = "left";
+                        p2.acceptinginput = false;
+                    }
+                    break;
+                case ConsoleKey.DownArrow:
+                    if (p2.direction != "up" && p2.acceptinginput)
+                    {
+                        p2.direction = "down";
+                        p2.acceptinginput = false;
+                    }
+                    break;
+                case ConsoleKey.RightArrow:
+                    if (p2.direction != "left" && p2.acceptinginput)
+                    {
+                        p2.direction = "right";
+                        p2.acceptinginput = false;
+                    }
+                    break;
+            }
+        }
+    }
+
+    static void Winner(Snake player)
+    {
+        Console.BackgroundColor = ConsoleColor.Black;
+        if (OperatingSystem.IsWindows())
+        {
+            Console.Beep(325, 240);
+            Thread.Sleep(65);
+            Console.Beep(325, 90);
+            Thread.Sleep(10);
+            Console.Beep(450, 190);
+            Thread.Sleep(20);
+            Console.Beep(450, 175);
+            Thread.Sleep(20);
+            Console.Beep(600, 1000);
+        }
+        Thread.Sleep(500);
+        for (int i = 0; i < Console.WindowHeight; i++)
+        {
+            Renderer.DrawLine(1, Console.WindowHeight - i, Console.WindowWidth, Console.WindowHeight - i, ConsoleColor.Black);
+            Renderer.Process();
+            Thread.Sleep(25);
+        }
+        Renderer.Clear();
+        Renderer.Process();
+        Console.SetCursorPosition(Console.WindowWidth / 2 - 6, Console.WindowHeight / 2);
+        Console.ForegroundColor = player.Color;
+        Console.Write($"Player {player.num} wins!");
+        Thread.Sleep(5000);
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.SetCursorPosition(0, Console.WindowHeight - 1);
+        Console.Clear();
+        Console.WriteLine("------------------------------------------------------------");
+        Console.WriteLine($"Selected difficulty >> {FrameDelay} (expressed in frametime)");
+        Console.WriteLine($"");
+        Console.WriteLine($"");
+        Console.WriteLine($"");
+        Console.WriteLine("------------------------------------------------------------");
+        Renderer.SendStats();
+        Console.WriteLine("------------------------------------------------------------");
+        Console.Read();
+    }
+}
+
+
+    </code></pre>
+</div>
+<div id="render" class="section">
+    <h2 class="gradient">Render.cs</h2>
+    <p>This is my custom renderer written in C#. It uses a familiar X, Y coordinate system to display different colored pixels in the console by changing the foreground color. This was the first project I truly began experimenting with C# in. This project eventually spiraled into my game, MultiplayerSnake. It went through *many* iterations to get where it is now. I am very proud of what it became. You can view the full integration with my midterm project on my <a href="https://github.com/jgray08/MultiplayerSnake" target="_blank" class="link">GitHub</a>.</p>
+    <pre><code class="language-csharp">
+namespace Render;
+
+public class Renderer
+{
+    private static ConsoleColor[] CurrentRender = new ConsoleColor[Console.WindowHeight * Console.WindowWidth];
+    private static ConsoleColor OldColor;
+    private static readonly ConsoleColor DefaultColor = ConsoleColor.Black;
+    private static int Segments;
+    private static System.Text.StringBuilder Tempstring = new();
+    private static readonly string[] SegmentContent = new string[Console.WindowHeight * Console.WindowWidth];
+    private static readonly ConsoleColor[] SegmentColor = new ConsoleColor[Console.WindowHeight * Console.WindowWidth];
+
+    public static void Process()
+    {
+        Segments = 0;
+        OldColor = CurrentRender[0];
+        for (int i = 0; i < CurrentRender.Length; i++)
+        {
+            if (CurrentRender[i] == OldColor)
+            {
+                Tempstring.Append("\u2588");
+            }
+            else
+            {
+                SegmentContent[Segments] = Tempstring.ToString();
+                SegmentColor[Segments] = OldColor;
+                Tempstring.Clear();
+                Tempstring.Append("\u2588");
+                Segments++;
+                OldColor = CurrentRender[i];
+            }
+            if (i == CurrentRender.Length - 1)
+            {
+                SegmentContent[Segments] = Tempstring.ToString();
+                SegmentColor[Segments] = OldColor;
+                Segments++;
+                Tempstring.Clear();
+                break;
+            }
+        }
+        Tempstring.Clear();
+        Render();
+    }
+
+    private static void Render()
+    {
+        for (int i = 0; i < Segments; i++)
+        {
+            Console.ForegroundColor = SegmentColor[i];
+            Console.Write($"{SegmentContent[i]}");
+        }
+        Console.SetCursorPosition(0, 0);
+    }
+
+    public static void Clear(ConsoleColor color = ConsoleColor.Black)
+    {
+        for (int i = 0; i < CurrentRender.Length; i++)
+        {
+            CurrentRender[i] = color;
+            OldColor = CurrentRender[0];
+        }
+    }
+
+    public static void Inject(int location, ConsoleColor color)
+    {
+        if (location <= Console.WindowHeight * Console.WindowWidth)
+        {
+            CurrentRender[location] = color;
+        }
+    }
+    
+    public static void Point(int x, int y, ConsoleColor color)
+    {
+        if (y <= Console.WindowHeight)
+        {
+            if (x <= Console.WindowWidth)
+            {
+                CurrentRender[Utilities.Location(x, y)] = color;
+            }
+        }
+    }
+
+    public static void DrawLine(int x1, int y1, int x2, int y2, ConsoleColor color)
+    {
+        List&lt;double[]> pointList = Utilities.PointsOnLine(x1, y1, x2, y2);
+        foreach (var point in pointList)
+        {
+            Inject(Utilities.Location(Convert.ToInt32(point[0]), Convert.ToInt32(point[1])), color);
+        }
+    }
+}
+    </code></pre>
+</div>
+
+
+<div class="foot">Programmed with &hearts; by Jackson Gray</div>
+</body>
+</html>

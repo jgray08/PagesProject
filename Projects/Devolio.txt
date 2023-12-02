@@ -1,0 +1,1 @@
+This is the PHP code written to create this "Devolio" (Developer portfolio) website. It indexes the files in my Projects directory, and automatically formats and displays them using Prism. It is adaptive and dynamic to suit my needs and personal design choices. It may update as my requirements change, so just check the page source :-)

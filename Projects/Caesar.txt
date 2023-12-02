@@ -1,0 +1,1 @@
+This is a project I completed for CS50x 2023. It is a Caesar cipher written in the C programming language. It "encrypts" messages by "rotating" or "shifting" them a certain amount <i><b>K</b></i> places.
